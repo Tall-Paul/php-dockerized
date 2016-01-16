@@ -24,7 +24,17 @@ RUN apt-get update && apt-get install -my \
   php5-mcrypt \
   php5-sqlite \
   php5-xdebug \
-  php-apc
+  php-apc \
+  build-essential \
+  chrpath \
+  libssl-dev \
+  libxft-dev \
+  libfreetype6 \
+  libfreetype6-dev \
+  libfontconfig1 \
+  libfontconfig1-dev \
+  git
+
 
 # Ensure that PHP5 FPM is run as root.
 RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf
@@ -52,11 +62,23 @@ COPY conf/nginx.conf /etc/nginx/
 COPY conf/supervisord.conf /etc/supervisor/conf.d/
 COPY conf/php.ini /etc/php5/fpm/conf.d/40-custom.ini
 
+#phantomjs install
+WORKDIR /root
+RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2
+RUN tar xvjf phantomjs-1.9.8-linux-x86_64.tar.bz2
+RUN mv phantomjs-1.9.8-linux-x86_64 /usr/local/share
+RUN ln -sf /usr/local/share/phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin
+
+
+
+
 ################################################################################
 # Volumes
 ################################################################################
 
 VOLUME ["/var/www", "/etc/nginx/conf.d"]
+
+RUN git clone https://github.com/jonnnnyw/php-phantomjs.git /var/www/default/lib/phantomjs
 
 ################################################################################
 # Ports

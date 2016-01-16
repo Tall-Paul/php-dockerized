@@ -1,5 +1,5 @@
 front:
-  build: .
+  build: ./dockerfiles/front
   ports:
     - "80:80"
     - "443:443"
@@ -10,6 +10,7 @@ front:
     - memcached:memcached
     - redis:redis
     - elasticsearch:elasticsearch
+    #- drill:drill
   volumes:
     - ./www:/var/www
     - ./sites:/etc/nginx/conf.d
@@ -21,6 +22,16 @@ mysql:
     - "3306:3306"
   environment:
     MYSQL_ROOT_PASSWORD: password
+
+
+#drill:
+#  build: ./dockerfiles/drill
+#  ports:
+#   - "8047:8047"
+#  links:
+#   - mongo:mongo
+#  volumes:
+#   - ./data:/data
 
 mongo:
   image: mongo
